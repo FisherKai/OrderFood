@@ -1,0 +1,33 @@
+# 服务器配置
+server:
+  port: 8080
+  mode: debug  # debug, release, test
+
+# 数据库配置
+database:
+  host: ""
+  port: 3306
+  username: ""
+  password: ""
+  database: "orderfood_db"
+  charset: "utf8mb4"
+  max_idle_conns: 10
+  max_open_conns: 100
+
+# JWT配置
+jwt:
+  secret: "your-secret-key-change-in-production"
+  expire_hours: 168  # 7天
+
+# 图片存储配置
+storage:
+  local_path: "./uploads"
+  image_max_size: 5242880  # 5MB
+  allowed_formats: ["jpg", "jpeg", "png", "gif", "webp"]
+  thumbnail_width: 300
+  thumbnail_height: 300
+
+# 公告配置
+announcement:
+  auto_play_interval: 3000  # 毫秒
+  max_display_count: 10
