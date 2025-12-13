@@ -275,3 +275,13 @@ MIT
 
 **开发日期**: 2025-11-13  
 **版本**: v1.0.0
+
+# 1. 导出为 tar 文件
+docker save orderfood:latest | gzip > orderfood.tar.gz
+
+# 2. 传输到其他机器（scp/U盘等）
+scp orderfood.tar.gz user@remote-host:/path/to/
+
+# 3. 其他机器加载镜像
+docker load < orderfood.tar.gz
+

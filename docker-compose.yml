@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0
+    container_name: orderfood-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-orderfood123}
+      MYSQL_DATABASE: orderfood_db
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - orderfood-network
+
+  # 应用服务（前后端一体）
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: orderfood-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # 数据库配置
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-orderfood123}
+      DB_NAME: orderfood_db
+      DB_MAX_IDLE: 10
+      DB_MAX_OPEN: 100
+      # 服务器配置
+      SERVER_MODE: release
+      # JWT配置
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-key-please-change-in-production}
+      JWT_EXPIRE_HOURS: 168
+      # 图片配置
+      IMAGE_MAX_SIZE: 5242880
+    volumes:
+      - uploads_data:/app/uploads
+    ports:
+      - "80:80"       # 统一入口
+      - "3000:3000"   # 移动端
+      - "3001:3001"   # 管理后台
+      - "8080:8080"   # 后端API（可选，调试用）
+    networks:
+      - orderfood-network
+
+volumes:
+  mysql_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  orderfood-network:
+    driver: bridge

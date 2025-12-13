@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Node modules
+frontend-admin/node_modules
+frontend-mobile/node_modules
+
+# 构建产物
+frontend-admin/dist
+frontend-mobile/dist
+
+# 本地配置
+backend/config.yaml
+.env
+
+# 日志和临时文件
+*.log
+*.tmp
+.DS_Store
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# 测试数据
+*.sql
+!init.sql
+
+# 文档
+*.md
+!README.md
+
+# 本地上传文件
+uploads/
+
+# 本地编译的二进制
+orderfood-backend
