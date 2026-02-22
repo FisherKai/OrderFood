@@ -172,11 +172,17 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { showToast, showLoadingToast, closeToast } from 'vant'
 import { weeklyMenuAPI } from '@/api/weekly_menu'
 import dayjs from 'dayjs'
+import weekOfYear from 'dayjs/plugin/weekOfYear'
+import isoWeek from 'dayjs/plugin/isoWeek'
+
+// 启用插件
+dayjs.extend(weekOfYear)
+dayjs.extend(isoWeek)
 
 // 响应式数据
 const loading = ref(false)
 const menuData = ref(null)
-const currentWeekStart = ref(dayjs().startOf('week').add(1, 'day')) // 周一
+const currentWeekStart = ref(dayjs().isoWeekday(1)) // 使用 ISO 周一
 const selectedDate = ref('')
 const dishDetailVisible = ref(false)
 const selectedDish = ref(null)
@@ -192,7 +198,7 @@ const mealTypes = [
 // 计算属性
 const weekTitle = computed(() => {
   const year = currentWeekStart.value.year()
-  const week = currentWeekStart.value.week()
+  const week = currentWeekStart.value.isoWeek()
   return `${year}年第${week}周`
 })
 

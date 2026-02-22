@@ -342,15 +342,12 @@ func DeleteWeeklyMenu(c *gin.Context) {
 // GetCurrentWeekMenu 获取当前周菜谱（用户端）
 func GetCurrentWeekMenu(c *gin.Context) {
 	now := time.Now()
-	// 获取本周一
-	weekday := int(now.Weekday())
-	if weekday == 0 {
-		weekday = 7 // 周日为7
-	}
-	weekStart := now.AddDate(0, 0, -(weekday-1)).Truncate(24 * time.Hour)
+	// 格式化为日期字符串（只保留年月日）
+	todayStr := now.Format("2006-01-02")
 
 	var menu models.WeeklyMenu
-	if err := database.DB.Where("week_start = ? AND status = ?", weekStart, models.MenuStatusPublished).
+	// 查找包含今天日期的已发布菜谱（今天在 week_start 和 week_end 之间）
+	if err := database.DB.Where("DATE(?) >= DATE(week_start) AND DATE(?) <= DATE(week_end) AND status = ?", todayStr, todayStr, models.MenuStatusPublished).
 		Preload("MenuItems.Dish.Images").
 		Preload("MenuItems.Dish.Category").
 		First(&menu).Error; err != nil {
@@ -364,21 +361,16 @@ func GetCurrentWeekMenu(c *gin.Context) {
 // GetWeekMenuByDate 根据日期获取菜谱（用户端）
 func GetWeekMenuByDate(c *gin.Context) {
 	dateStr := c.Param("date")
-	date, err := time.Parse("2006-01-02", dateStr)
+	// 验证日期格式
+	_, err := time.ParseInLocation("2006-01-02", dateStr, time.Local)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "日期格式错误"})
 		return
 	}
 
-	// 获取该日期所在周的周一
-	weekday := int(date.Weekday())
-	if weekday == 0 {
-		weekday = 7 // 周日为7
-	}
-	weekStart := date.AddDate(0, 0, -(weekday-1)).Truncate(24 * time.Hour)
-
 	var menu models.WeeklyMenu
-	if err := database.DB.Where("week_start = ? AND status = ?", weekStart, models.MenuStatusPublished).
+	// 查找包含该日期的已发布菜谱（日期在 week_start 和 week_end 之间）
+	if err := database.DB.Where("DATE(?) >= DATE(week_start) AND DATE(?) <= DATE(week_end) AND status = ?", dateStr, dateStr, models.MenuStatusPublished).
 		Preload("MenuItems.Dish.Images").
 		Preload("MenuItems.Dish.Category").
 		First(&menu).Error; err != nil {

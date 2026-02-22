@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+# 确保UTF-8编码
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+
 # 生成配置文件（从环境变量）
 cat > /app/config.yaml << EOF
 # 服务器配置

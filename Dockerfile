@@ -41,8 +41,10 @@ WORKDIR /app
 # 安装必要的运行时依赖
 RUN apk add --no-cache ca-certificates tzdata nginx netcat-openbsd
 
-# 设置时区
+# 设置时区和字符集
 ENV TZ=Asia/Shanghai
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
 # 从构建阶段复制后端二进制文件
 COPY --from=backend-builder /app/orderfood-server /app/
