@@ -39,5 +39,20 @@ export const weeklyMenuAPI = {
   // 根据日期获取菜谱（用户端）
   getWeekMenuByDate(date) {
     return request.get(`/menus/weekly/${date}`)
+  },
+
+  // 获取菜谱评价列表（管理员）
+  getMenuRatings(params = {}) {
+    return request.get('/admin/menus/ratings', { params })
+  },
+
+  // 获取菜谱评价统计（管理员）
+  getMenuRatingStats(params = {}) {
+    return request.get('/admin/menus/ratings/stats', { params })
+  },
+
+  // 删除评价（管理员）
+  deleteMenuRating(id) {
+    return request.delete(`/admin/menus/ratings/${id}`)
   }
 }

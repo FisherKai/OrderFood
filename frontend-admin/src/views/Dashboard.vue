@@ -1,9 +1,9 @@
 <template>
-  <div class="admin-container">
+  <div class="admin-container" :class="{ 'mobile': isMobile }">
     <!-- 统计卡片 -->
-    <el-row :gutter="20" class="stats-row">
+    <el-row :gutter="isMobile ? 10 : 20" class="stats-row">
       <el-col :xs="12" :sm="8" :md="6" :lg="6">
-        <el-card class="stat-card">
+        <el-card class="stat-card" :body-style="{ padding: isMobile ? '12px' : '20px' }">
           <div class="stat-icon primary">
             <el-icon><Food /></el-icon>
           </div>
@@ -13,7 +13,7 @@
       </el-col>
       
       <el-col :xs="12" :sm="8" :md="6" :lg="6">
-        <el-card class="stat-card">
+        <el-card class="stat-card" :body-style="{ padding: isMobile ? '12px' : '20px' }">
           <div class="stat-icon success">
             <el-icon><Document /></el-icon>
           </div>
@@ -23,7 +23,7 @@
       </el-col>
       
       <el-col :xs="12" :sm="8" :md="6" :lg="6">
-        <el-card class="stat-card">
+        <el-card class="stat-card" :body-style="{ padding: isMobile ? '12px' : '20px' }">
           <div class="stat-icon warning">
             <el-icon><User /></el-icon>
           </div>
@@ -33,7 +33,7 @@
       </el-col>
       
       <el-col :xs="12" :sm="8" :md="6" :lg="6">
-        <el-card class="stat-card">
+        <el-card class="stat-card" :body-style="{ padding: isMobile ? '12px' : '20px' }">
           <div class="stat-icon danger">
             <el-icon><Star /></el-icon>
           </div>
@@ -44,7 +44,7 @@
     </el-row>
     
     <!-- 图表区域 -->
-    <el-row :gutter="20" class="charts-row">
+    <el-row :gutter="isMobile ? 10 : 20" class="charts-row">
       <el-col :xs="24" :lg="12">
         <el-card class="admin-card">
           <template #header>
@@ -52,11 +52,12 @@
               <span class="card-title">订单趋势</span>
             </div>
           </template>
-          <div class="chart-container">
+          <div class="chart-container" :style="{ height: isMobile ? '220px' : '300px' }">
             <v-chart
               class="chart"
               :option="orderChartOption"
               :loading="chartLoading"
+              autoresize
             />
           </div>
         </el-card>
@@ -69,11 +70,12 @@
               <span class="card-title">菜品分类统计</span>
             </div>
           </template>
-          <div class="chart-container">
+          <div class="chart-container" :style="{ height: isMobile ? '220px' : '300px' }">
             <v-chart
               class="chart"
               :option="categoryChartOption"
               :loading="chartLoading"
+              autoresize
             />
           </div>
         </el-card>
@@ -81,18 +83,25 @@
     </el-row>
     
     <!-- 最近活动 -->
-    <el-row :gutter="20" class="activity-row">
+    <el-row :gutter="isMobile ? 10 : 20" class="activity-row">
       <el-col :xs="24" :lg="16">
         <el-card class="admin-card">
           <template #header>
             <div class="card-header">
               <span class="card-title">最近订单</span>
-              <el-button type="text" @click="$router.push('/orders')">
+              <el-button type="primary" link @click="$router.push('/orders')">
                 查看全部
               </el-button>
             </div>
           </template>
-          <el-table :data="recentOrders" style="width: 100%" v-loading="tableLoading">
+          
+          <!-- 桌面端表格 -->
+          <el-table 
+            v-if="!isMobile"
+            :data="recentOrders" 
+            style="width: 100%" 
+            v-loading="tableLoading"
+          >
             <el-table-column prop="id" label="订单号" width="100" />
             <el-table-column prop="user_name" label="用户" />
             <el-table-column prop="total_price" label="金额">
@@ -102,7 +111,7 @@
             </el-table-column>
             <el-table-column prop="status" label="状态">
               <template #default="{ row }">
-                <el-tag :type="getOrderStatusType(row.status)">
+                <el-tag :type="getOrderStatusType(row.status)" size="small">
                   {{ getOrderStatusText(row.status) }}
                 </el-tag>
               </template>
@@ -113,6 +122,39 @@
               </template>
             </el-table-column>
           </el-table>
+          
+          <!-- 移动端卡片列表 -->
+          <div v-else class="mobile-order-list" v-loading="tableLoading">
+            <div 
+              v-for="order in recentOrders" 
+              :key="order.id" 
+              class="order-card"
+              @click="$router.push('/orders')"
+            >
+              <div class="order-header">
+                <span class="order-id">#{{ order.id }}</span>
+                <el-tag :type="getOrderStatusType(order.status)" size="small">
+                  {{ getOrderStatusText(order.status) }}
+                </el-tag>
+              </div>
+              <div class="order-body">
+                <div class="order-info">
+                  <span class="label">用户</span>
+                  <span class="value">{{ order.user_name }}</span>
+                </div>
+                <div class="order-info">
+                  <span class="label">金额</span>
+                  <span class="value price">¥{{ order.total_price }}</span>
+                </div>
+                <div class="order-info">
+                  <span class="label">时间</span>
+                  <span class="value">{{ formatDate(order.created_at) }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <el-empty v-if="recentOrders.length === 0" description="暂无订单" />
+          </div>
         </el-card>
       </el-col>
       
@@ -125,19 +167,19 @@
           </template>
           <div class="system-info">
             <div class="info-item">
-              <span class="label">系统版本：</span>
+              <span class="label">系统版本</span>
               <span class="value">v1.0.0</span>
             </div>
             <div class="info-item">
-              <span class="label">运行时间：</span>
+              <span class="label">运行时间</span>
               <span class="value">{{ uptime }}</span>
             </div>
             <div class="info-item">
-              <span class="label">当前时间：</span>
+              <span class="label">当前时间</span>
               <span class="value">{{ currentTime }}</span>
             </div>
             <div class="info-item">
-              <span class="label">在线管理员：</span>
+              <span class="label">在线管理员</span>
               <span class="value">{{ adminStore.adminInfo.username || '管理员' }}</span>
             </div>
           </div>
@@ -148,7 +190,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Food, Document, User, Star } from '@element-plus/icons-vue'
 import VChart from 'vue-echarts'
@@ -162,6 +204,7 @@ import {
   GridComponent
 } from 'echarts/components'
 import { useAdminStore } from '@/stores/admin'
+import { useDevice } from '@/composables/useDevice'
 import { dashboardAPI } from '@/api/dashboard'
 import { orderAPI } from '@/api/order'
 import dayjs from 'dayjs'
@@ -178,6 +221,7 @@ use([
 ])
 
 const adminStore = useAdminStore()
+const { isMobile, screenWidth } = useDevice()
 
 const stats = reactive({
   dishCount: 0,
@@ -195,53 +239,92 @@ const uptime = ref('1天2小时30分钟')
 let timeInterval = null
 
 // 订单趋势图表配置
-const orderChartOption = ref({
+const orderChartOption = computed(() => ({
   title: {
-    text: '最近7天订单趋势'
+    text: '最近7天订单趋势',
+    textStyle: {
+      fontSize: isMobile.value ? 14 : 16
+    },
+    left: isMobile.value ? 'center' : 'left'
   },
   tooltip: {
     trigger: 'axis'
   },
+  grid: {
+    left: isMobile.value ? '10%' : '3%',
+    right: isMobile.value ? '5%' : '4%',
+    bottom: '3%',
+    containLabel: true
+  },
   xAxis: {
     type: 'category',
-    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+    data: orderTrendData.value.dates,
+    axisLabel: {
+      fontSize: isMobile.value ? 10 : 12,
+      rotate: isMobile.value ? 45 : 0
+    }
   },
   yAxis: {
-    type: 'value'
+    type: 'value',
+    axisLabel: {
+      fontSize: isMobile.value ? 10 : 12
+    }
   },
   series: [{
-    data: [12, 19, 15, 27, 32, 25, 18],
+    data: orderTrendData.value.counts,
     type: 'line',
     smooth: true,
     itemStyle: {
       color: '#409eff'
+    },
+    areaStyle: {
+      color: {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [
+          { offset: 0, color: 'rgba(64, 158, 255, 0.3)' },
+          { offset: 1, color: 'rgba(64, 158, 255, 0.05)' }
+        ]
+      }
     }
   }]
-})
+}))
 
 // 分类统计图表配置
-const categoryChartOption = ref({
+const categoryChartOption = computed(() => ({
   title: {
     text: '菜品分类分布',
-    left: 'center'
+    left: 'center',
+    textStyle: {
+      fontSize: isMobile.value ? 14 : 16
+    }
   },
   tooltip: {
-    trigger: 'item'
+    trigger: 'item',
+    formatter: '{b}: {c} ({d}%)'
   },
   legend: {
-    orient: 'vertical',
-    left: 'left'
+    orient: isMobile.value ? 'horizontal' : 'vertical',
+    left: isMobile.value ? 'center' : 'left',
+    top: isMobile.value ? 'bottom' : 'middle',
+    itemWidth: isMobile.value ? 10 : 14,
+    itemHeight: isMobile.value ? 10 : 14,
+    textStyle: {
+      fontSize: isMobile.value ? 11 : 12
+    }
   },
   series: [{
     type: 'pie',
-    radius: '50%',
-    data: [
-      { value: 1048, name: '主食' },
-      { value: 735, name: '凉菜' },
-      { value: 580, name: '热菜' },
-      { value: 484, name: '汤类' },
-      { value: 300, name: '饮品' }
-    ],
+    radius: isMobile.value ? ['30%', '55%'] : ['40%', '60%'],
+    center: isMobile.value ? ['50%', '45%'] : ['50%', '50%'],
+    data: categoryData.value,
+    label: {
+      show: !isMobile.value,
+      fontSize: 12
+    },
     emphasis: {
       itemStyle: {
         shadowBlur: 10,
@@ -250,7 +333,21 @@ const categoryChartOption = ref({
       }
     }
   }]
+}))
+
+// 图表数据
+const orderTrendData = ref({
+  dates: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+  counts: [12, 19, 15, 27, 32, 25, 18]
 })
+
+const categoryData = ref([
+  { value: 1048, name: '主食' },
+  { value: 735, name: '凉菜' },
+  { value: 580, name: '热菜' },
+  { value: 484, name: '汤类' },
+  { value: 300, name: '饮品' }
+])
 
 // 获取订单状态类型
 const getOrderStatusType = (status) => {
@@ -336,7 +433,7 @@ const loadChartData = async () => {
     const response = await dashboardAPI.getChartData()
     const data = response.data
     
-    // 更新订单趋势图表
+    // 更新订单趋势图表数据
     if (data.order_trend && data.order_trend.length > 0) {
       const dates = data.order_trend.map(item => {
         const date = new Date(item.date)
@@ -344,45 +441,15 @@ const loadChartData = async () => {
       })
       const counts = data.order_trend.map(item => item.count)
       
-      orderChartOption.value = {
-        ...orderChartOption.value,
-        xAxis: {
-          type: 'category',
-          data: dates
-        },
-        series: [{
-          data: counts,
-          type: 'line',
-          smooth: true,
-          itemStyle: {
-            color: '#409eff'
-          }
-        }]
-      }
+      orderTrendData.value = { dates, counts }
     }
     
-    // 更新分类统计图表
+    // 更新分类统计图表数据
     if (data.category_stats && data.category_stats.length > 0) {
-      const categoryData = data.category_stats.map(item => ({
+      categoryData.value = data.category_stats.map(item => ({
         value: item.dish_count,
         name: item.category_name || '未分类'
       }))
-      
-      categoryChartOption.value = {
-        ...categoryChartOption.value,
-        series: [{
-          type: 'pie',
-          radius: '50%',
-          data: categoryData,
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }]
-      }
     }
   } catch (error) {
     console.error('加载图表数据失败:', error)
@@ -454,13 +521,111 @@ onUnmounted(() => {
   }
 }
 
+// 移动端订单卡片列表
+.mobile-order-list {
+  .order-card {
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      background: #f0f7ff;
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      
+      .order-id {
+        font-size: 15px;
+        font-weight: 600;
+        color: #303133;
+      }
+    }
+    
+    .order-body {
+      .order-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 0;
+        font-size: 13px;
+        
+        .label {
+          color: #909399;
+        }
+        
+        .value {
+          color: #606266;
+          
+          &.price {
+            color: #f56c6c;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 移动端样式
+.admin-container.mobile {
+  padding: 12px;
+  
+  .stats-row {
+    margin-bottom: 12px;
+    
+    :deep(.el-col) {
+      margin-bottom: 10px;
+    }
+  }
+  
+  .charts-row {
+    margin-bottom: 12px;
+    
+    :deep(.el-col) {
+      margin-bottom: 12px;
+    }
+  }
+  
+  .activity-row {
+    margin-bottom: 12px;
+    
+    :deep(.el-col) {
+      margin-bottom: 12px;
+    }
+  }
+  
+  .system-info {
+    .info-item {
+      padding: 10px 0;
+      
+      .label, .value {
+        font-size: 13px;
+      }
+    }
+  }
+}
+
 @media (max-width: 768px) {
   :deep(.el-col) {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
   
   .chart-container {
-    height: 250px;
+    height: 220px;
   }
 }
 </style>

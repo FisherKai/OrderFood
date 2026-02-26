@@ -58,6 +58,7 @@ func AutoMigrate() error {
 		&models.Announcement{},
 		&models.WeeklyMenu{},
 		&models.MenuItem{},
+		&models.MenuItemRating{},
 		&models.DishLike{},
 		&models.Room{},
 		&models.RoomImage{},

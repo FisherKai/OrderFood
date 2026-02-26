@@ -186,46 +186,54 @@
             {{ formatDate(row.created_at) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" :width="isMobile ? 180 : 260">
           <template #default="{ row }">
-            <el-dropdown @command="(command) => handleStatusChange(row, command)">
-              <el-button type="primary" size="small">
-                更新状态 <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            <div class="action-buttons">
+              <!-- 待处理 -> 制作中 -->
+              <el-button
+                v-if="row.status === 1"
+                type="primary"
+                size="small"
+                @click="handleStatusChange(row, 2)"
+              >
+                <el-icon v-if="!isMobile"><Loading /></el-icon>
+                {{ isMobile ? '接单' : '接单制作' }}
               </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item
-                    v-if="row.status === 1"
-                    command="2"
-                    :disabled="row.status === 2"
-                  >
-                    <el-icon><Loading /></el-icon>
-                    接单制作
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    v-if="row.status === 2"
-                    command="3"
-                    :disabled="row.status === 3"
-                  >
-                    <el-icon><Check /></el-icon>
-                    完成订单
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    v-if="row.status < 3"
-                    command="4"
-                    :disabled="row.status === 4"
-                  >
-                    <el-icon><Close /></el-icon>
-                    取消订单
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-            
-            <el-button type="text" @click="handleViewDetail(row)" size="small">
-              <el-icon><View /></el-icon>
-              详情
-            </el-button>
+              
+              <!-- 制作中 -> 已完成 -->
+              <el-button
+                v-if="row.status === 2"
+                type="success"
+                size="small"
+                @click="handleStatusChange(row, 3)"
+              >
+                <el-icon v-if="!isMobile"><Check /></el-icon>
+                {{ isMobile ? '完成' : '完成订单' }}
+              </el-button>
+              
+              <!-- 取消订单（待处理/制作中都可取消） -->
+              <el-button
+                v-if="row.status < 3"
+                type="danger"
+                size="small"
+                plain
+                @click="handleStatusChange(row, 4)"
+              >
+                <el-icon v-if="!isMobile"><Close /></el-icon>
+                取消
+              </el-button>
+              
+              <!-- 查看详情 -->
+              <el-button
+                type="info"
+                size="small"
+                plain
+                @click="handleViewDetail(row)"
+              >
+                <el-icon v-if="!isMobile"><View /></el-icon>
+                详情
+              </el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -314,14 +322,18 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Search, Refresh, Download, Clock, Loading, Check, Close,
-  ArrowDown, View
+  View
 } from '@element-plus/icons-vue'
 import { orderAPI } from '@/api/order'
+import { useDevice } from '@/composables/useDevice'
 import dayjs from 'dayjs'
+
+// 设备检测
+const { isMobile } = useDevice()
 
 // 搜索表单
 const searchForm = reactive({
@@ -497,7 +509,7 @@ const handleExpandChange = (row, expandedRows) => {
 const handleStatusChange = async (row, newStatus) => {
   try {
     await ElMessageBox.confirm(
-      `确定要将订单 ${row.id} 的状态更改为"${getOrderStatusText(parseInt(newStatus))}"吗？`,
+      `确定要将订单 ${row.id} 的状态更改为"${getOrderStatusText(newStatus)}"吗？`,
       '确认操作',
       {
         confirmButtonText: '确定',
@@ -506,11 +518,11 @@ const handleStatusChange = async (row, newStatus) => {
       }
     )
     
-    await orderAPI.updateOrderStatus(row.id, { status: parseInt(newStatus) })
+    await orderAPI.updateOrderStatus(row.id, { status: newStatus })
     ElMessage.success('状态更新成功')
     
     // 更新本地数据
-    row.status = parseInt(newStatus)
+    row.status = newStatus
     loadOrderStats()
   } catch (error) {
     if (error !== 'cancel') {
@@ -654,5 +666,32 @@ onMounted(() => {
   .el-icon {
     font-size: 12px;
   }
+}
+
+// 操作按钮样式
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  
+  .el-button {
+    margin: 0 !important;
+    
+    // 移动端按钮更紧凑
+    @media (max-width: 768px) {
+      padding: 4px 8px;
+      font-size: 12px;
+      
+      .el-icon {
+        display: none;
+      }
+    }
+  }
+}
+
+// 表格容器允许溢出
+:deep(.el-card__body) {
+  overflow: visible !important;
 }
 </style>

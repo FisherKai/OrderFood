@@ -50,6 +50,7 @@ func SetupRouter() *gin.Engine {
 		// 菜谱相关
 		api.GET("/menus/weekly", controllers.GetCurrentWeekMenu)
 		api.GET("/menus/weekly/:date", controllers.GetWeekMenuByDate)
+		api.GET("/menus/dish/:dish_id/rating", controllers.GetDishAvgRating) // 获取菜品平均评分（公开）
 
 		// 商城相关
 		api.GET("/shop/categories", controllers.GetShopCategories)
@@ -99,6 +100,10 @@ func SetupRouter() *gin.Engine {
 			// 商城
 			user.POST("/shop/orders", controllers.CreateShopOrder)
 			user.GET("/shop/orders", controllers.GetShopOrders)
+
+			// 菜谱评价
+			user.POST("/menus/ratings", controllers.CreateMenuRating)
+			user.GET("/menus/ratings/my", controllers.GetMyMenuRatings)
 		}
 
 		// 管理端路由
@@ -201,6 +206,11 @@ func SetupRouter() *gin.Engine {
 				adminAuth.PUT("/shop/orders/:id/status", controllers.AdminUpdateShopOrderStatus)
 				adminAuth.GET("/shop/inventory", controllers.AdminGetInventoryRecords)
 				adminAuth.POST("/shop/inventory/adjust", controllers.AdminAdjustInventory)
+
+				// 菜谱评价管理
+				adminAuth.GET("/menus/ratings", controllers.GetMenuItemRatings)
+				adminAuth.GET("/menus/ratings/stats", controllers.GetMenuRatingStats)
+				adminAuth.DELETE("/menus/ratings/:id", controllers.DeleteMenuRating)
 			}
 		}
 	}

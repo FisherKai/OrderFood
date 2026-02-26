@@ -189,20 +189,362 @@
   }
 }
 
-// 响应式设计
+// ========== 移动端响应式样式 ==========
+
+// 移动端表格样式
+.mobile-table {
+  .el-table {
+    font-size: 13px;
+    
+    .el-table__header th {
+      padding: 8px 0;
+      font-size: 12px;
+    }
+    
+    .el-table__body td {
+      padding: 8px 0;
+    }
+    
+    .cell {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+}
+
+// 移动端卡片列表
+.mobile-card-list {
+  .card-item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      
+      .card-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #303133;
+      }
+      
+      .card-status {
+        font-size: 12px;
+      }
+    }
+    
+    .card-body {
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        font-size: 13px;
+        color: #606266;
+        border-bottom: 1px solid #f5f5f5;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+        
+        .label {
+          color: #909399;
+        }
+        
+        .value {
+          font-weight: 500;
+        }
+      }
+    }
+    
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+  }
+}
+
+// 移动端按钮组
+.mobile-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  
+  .el-button {
+    flex: 1;
+    min-width: 80px;
+  }
+  
+  &.full-width {
+    .el-button {
+      flex: none;
+      width: 100%;
+    }
+  }
+}
+
+// 移动端表单
+.mobile-form {
+  .el-form-item {
+    margin-bottom: 16px;
+    
+    .el-form-item__label {
+      padding-bottom: 6px;
+      line-height: 1.2;
+    }
+    
+    .el-input, .el-select {
+      width: 100%;
+    }
+  }
+  
+  .form-actions {
+    padding: 15px 0;
+    
+    .el-button {
+      width: 100%;
+      margin: 0 0 10px 0;
+      height: 44px;
+      font-size: 15px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// 移动端弹窗
+.mobile-dialog {
+  .el-dialog {
+    width: 92% !important;
+    max-width: 400px;
+    margin: 15vh auto !important;
+    border-radius: 12px;
+    
+    .el-dialog__header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      
+      .el-dialog__title {
+        font-size: 17px;
+        font-weight: 600;
+      }
+    }
+    
+    .el-dialog__body {
+      padding: 20px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    
+    .el-dialog__footer {
+      padding: 12px 20px;
+      border-top: 1px solid #f0f0f0;
+    }
+  }
+}
+
+// 响应式断点样式
 @media (max-width: 768px) {
   .admin-container {
-    padding: 10px;
+    padding: 12px;
+    min-height: calc(100vh - 56px);
   }
   
   .search-bar {
-    padding: 15px;
+    padding: 12px;
+    margin-bottom: 12px;
     
     .search-form {
       .el-form-item {
         margin-right: 0;
+        margin-bottom: 12px;
         width: 100%;
+      }
+      
+      .el-input, .el-select {
+        width: 100%;
+      }
+      
+      .search-actions {
+        display: flex;
+        gap: 10px;
+        
+        .el-button {
+          flex: 1;
+          margin-right: 0;
+        }
       }
     }
   }
+  
+  .stat-card {
+    padding: 15px 10px;
+    
+    .stat-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+    
+    .stat-number {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+    }
+  }
+  
+  .admin-card {
+    margin-bottom: 12px;
+    
+    :deep(.el-card__header) {
+      padding: 12px 15px;
+      
+      .card-header {
+        .card-title {
+          font-size: 15px;
+        }
+      }
+    }
+    
+    :deep(.el-card__body) {
+      padding: 12px 15px;
+    }
+  }
+  
+  // 表格响应式
+  .el-table {
+    font-size: 13px;
+    
+    .el-table__header th {
+      padding: 8px 0;
+      font-size: 12px;
+      
+      .cell {
+        padding: 0 6px;
+      }
+    }
+    
+    .el-table__body td {
+      padding: 10px 0;
+      
+      .cell {
+        padding: 0 6px;
+      }
+    }
+    
+    // 操作按钮
+    .el-button--small {
+      padding: 5px 8px;
+      font-size: 12px;
+    }
+  }
+  
+  // 分页响应式
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    
+    .el-pagination__sizes,
+    .el-pagination__jump {
+      display: none;
+    }
+    
+    .btn-prev, .btn-next {
+      padding: 0 8px;
+    }
+  }
+  
+  // 对话框全屏
+  .el-dialog {
+    --el-dialog-width: 92% !important;
+    margin-top: 10vh !important;
+    
+    .el-dialog__body {
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+  }
+  
+  // 下拉菜单
+  .el-dropdown-menu {
+    min-width: 120px;
+  }
+  
+  // 消息提示框
+  .el-message-box {
+    width: 85% !important;
+    max-width: 320px;
+  }
+  
+  // 抽屉
+  .el-drawer {
+    width: 85% !important;
+    max-width: 350px;
+  }
+}
+
+// 平板响应式 (768px - 1024px)
+@media (min-width: 768px) and (max-width: 1024px) {
+  .admin-container {
+    padding: 15px;
+  }
+  
+  .stat-card {
+    .stat-icon {
+      font-size: 40px;
+    }
+    
+    .stat-number {
+      font-size: 28px;
+    }
+  }
+}
+
+// 隐藏类
+.hidden-mobile {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.hidden-desktop {
+  @media (min-width: 769px) {
+    display: none !important;
+  }
+}
+
+// 仅移动端显示
+.show-mobile {
+  display: none !important;
+  
+  @media (max-width: 768px) {
+    display: block !important;
+  }
+}
+
+// 仅桌面端显示
+.show-desktop {
+  display: block !important;
+  
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+// 触摸友好的按钮
+.touch-btn {
+  min-height: 44px;
+  min-width: 44px;
 }

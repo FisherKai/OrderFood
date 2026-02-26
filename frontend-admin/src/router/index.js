@@ -39,6 +39,12 @@ const routes = [
         meta: { title: '菜谱管理', icon: 'Calendar' }
       },
       {
+        path: 'menu-ratings',
+        name: 'MenuRatings',
+        component: () => import('@/views/MenuRatings.vue'),
+        meta: { title: '菜谱评价', icon: 'ChatDotRound' }
+      },
+      {
         path: 'orders',
         name: 'Orders',
         component: () => import('@/views/Orders.vue'),

@@ -2,9 +2,23 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#409eff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
     <title>点餐系统 - 管理后台</title>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <style>
+      /* 防止移动端点击高亮 */
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* 优化移动端滚动 */
+      html, body {
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
