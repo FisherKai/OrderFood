@@ -421,11 +421,49 @@ func DeleteWeeklyMenu(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "删除成功"})
 }
 
+// SetCycleMenu 设置/取消循环菜谱（管理员）
+func SetCycleMenu(c *gin.Context) {
+	id := c.Param("id")
+	var menu models.WeeklyMenu
+
+	if err := database.DB.First(&menu, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "菜谱不存在"})
+		return
+	}
+
+	var req struct {
+		IsCycle bool `json:"is_cycle"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 如果要设为循环菜谱，先取消其他循环菜谱
+	if req.IsCycle {
+		if err := database.DB.Model(&models.WeeklyMenu{}).Where("is_cycle = ?", true).Update("is_cycle", false).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "取消其他循环菜谱失败"})
+			return
+		}
+	}
+
+	menu.IsCycle = req.IsCycle
+	if err := database.DB.Save(&menu).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "设置循环菜谱失败"})
+		return
+	}
+
+	msg := "已取消循环菜谱"
+	if req.IsCycle {
+		msg = "已设为循环菜谱"
+	}
+	c.JSON(http.StatusOK, gin.H{"message": msg, "data": menu})
+}
+
 // GetCurrentWeekMenu 获取当前周菜谱（用户端）
-// 支持循环展示：如果当前周没有菜谱，使用最近发布的菜谱
+// 支持循环展示：如果当前周没有菜谱，优先使用标记为循环的菜谱，否则使用最近发布的菜谱
 func GetCurrentWeekMenu(c *gin.Context) {
 	now := time.Now()
-	// 格式化为日期字符串（只保留年月日）
 	todayStr := now.Format("2006-01-02")
 
 	var menu models.WeeklyMenu
@@ -436,17 +474,24 @@ func GetCurrentWeekMenu(c *gin.Context) {
 		First(&menu).Error
 
 	if err != nil {
-		// 如果当前周没有菜谱，查找最近的已发布菜谱（支持循环展示）
-		if err := database.DB.Where("status = ?", models.MenuStatusPublished).
-			Order("week_start DESC").
+		// 优先查找标记为循环菜谱的已发布菜谱
+		err = database.DB.Where("status = ? AND is_cycle = ?", models.MenuStatusPublished, true).
 			Preload("MenuItems.Dish.Images").
 			Preload("MenuItems.Dish.Category").
-			First(&menu).Error; err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "暂无已发布的菜谱"})
-			return
+			First(&menu).Error
+
+		if err != nil {
+			// 如果没有循环菜谱，查找最近的已发布菜谱
+			if err := database.DB.Where("status = ?", models.MenuStatusPublished).
+				Order("week_start DESC").
+				Preload("MenuItems.Dish.Images").
+				Preload("MenuItems.Dish.Category").
+				First(&menu).Error; err != nil {
+				c.JSON(http.StatusNotFound, gin.H{"error": "暂无已发布的菜谱"})
+				return
+			}
 		}
 
-		// 标记为循环使用的菜谱
 		c.JSON(http.StatusOK, gin.H{
 			"data":     menu,
 			"is_cycle": true,
@@ -459,10 +504,9 @@ func GetCurrentWeekMenu(c *gin.Context) {
 }
 
 // GetWeekMenuByDate 根据日期获取菜谱（用户端）
-// 支持循环展示：如果指定周没有菜谱，使用最近发布的菜谱
+// 支持循环展示：如果指定周没有菜谱，优先使用标记为循环的菜谱
 func GetWeekMenuByDate(c *gin.Context) {
 	dateStr := c.Param("date")
-	// 验证日期格式
 	_, err := time.ParseInLocation("2006-01-02", dateStr, time.Local)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "日期格式错误"})
@@ -477,17 +521,24 @@ func GetWeekMenuByDate(c *gin.Context) {
 		First(&menu).Error
 
 	if err != nil {
-		// 如果该周没有菜谱，查找最近的已发布菜谱（支持循环展示）
-		if err := database.DB.Where("status = ?", models.MenuStatusPublished).
-			Order("week_start DESC").
+		// 优先查找标记为循环菜谱的已发布菜谱
+		err = database.DB.Where("status = ? AND is_cycle = ?", models.MenuStatusPublished, true).
 			Preload("MenuItems.Dish.Images").
 			Preload("MenuItems.Dish.Category").
-			First(&menu).Error; err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "暂无已发布的菜谱"})
-			return
+			First(&menu).Error
+
+		if err != nil {
+			// 如果没有循环菜谱，查找最近的已发布菜谱
+			if err := database.DB.Where("status = ?", models.MenuStatusPublished).
+				Order("week_start DESC").
+				Preload("MenuItems.Dish.Images").
+				Preload("MenuItems.Dish.Category").
+				First(&menu).Error; err != nil {
+				c.JSON(http.StatusNotFound, gin.H{"error": "暂无已发布的菜谱"})
+				return
+			}
 		}
 
-		// 标记为循环使用的菜谱
 		c.JSON(http.StatusOK, gin.H{
 			"data":     menu,
 			"is_cycle": true,

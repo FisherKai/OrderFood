@@ -13,22 +13,10 @@ const routes = [
     meta: { title: '首页' }
   },
   {
-    path: '/dishes',
-    name: 'Dishes',
-    component: () => import('@/views/Dishes.vue'),
-    meta: { title: '菜品列表' }
-  },
-  {
     path: '/weekly-menu',
     name: 'WeeklyMenu',
     component: () => import('@/views/WeeklyMenu.vue'),
     meta: { title: '本周菜谱' }
-  },
-  {
-    path: '/dish/:id',
-    name: 'DishDetail',
-    component: () => import('@/views/DishDetail.vue'),
-    meta: { title: '菜品详情' }
   },
   {
     path: '/cart',

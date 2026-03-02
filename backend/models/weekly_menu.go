@@ -12,6 +12,7 @@ type WeeklyMenu struct {
 	WeekEnd     time.Time      `gorm:"not null;index" json:"week_end"`      // 周结束日期
 	Title       string         `gorm:"size:100;not null" json:"title"`      // 菜谱标题
 	Status      int            `gorm:"default:0" json:"status"`             // 状态：0-草稿，1-已发布
+	IsCycle     bool           `gorm:"default:false" json:"is_cycle"`       // 是否为循环菜谱
 	CreatedBy   uint           `gorm:"not null" json:"created_by"`          // 创建人ID
 	CreatedAt   time.Time      `json:"created_at"`
 	UpdatedAt   time.Time      `json:"updated_at"`

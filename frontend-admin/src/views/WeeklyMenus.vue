@@ -69,6 +69,9 @@
             <el-tag :type="row.status === 1 ? 'success' : 'info'">
               {{ row.status === 1 ? '已发布' : '草稿' }}
             </el-tag>
+            <el-tag v-if="row.is_cycle" type="warning" style="margin-left: 4px">
+              循环
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="creator" label="创建人" width="120">
@@ -81,7 +84,7 @@
             {{ formatDateTime(row.created_at) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="280" fixed="right">
           <template #default="{ row }">
             <el-button type="text" @click="handleView(row)">
               <el-icon><View /></el-icon>
@@ -99,6 +102,15 @@
             >
               <el-icon><Check /></el-icon>
               发布
+            </el-button>
+            <el-button 
+              v-if="row.status === 1"
+              type="text" 
+              @click="handleSetCycle(row)"
+              :class="row.is_cycle ? 'warning' : 'cycle'"
+            >
+              <el-icon><RefreshRight /></el-icon>
+              {{ row.is_cycle ? '取消循环' : '设为循环' }}
             </el-button>
             <el-button type="text" @click="handleDelete(row)" class="danger">
               <el-icon><Delete /></el-icon>
@@ -364,7 +376,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  Search, Refresh, Plus, View, Edit, Delete, Check, Close
+  Search, Refresh, Plus, View, Edit, Delete, Check, Close, RefreshRight
 } from '@element-plus/icons-vue'
 import { weeklyMenuAPI } from '@/api/weekly_menu'
 import { dishAPI } from '@/api/dish'
@@ -680,6 +692,35 @@ const handlePublish = async (row) => {
   }
 }
 
+// 设置/取消循环菜谱
+const handleSetCycle = async (row) => {
+  const isCycle = !row.is_cycle
+  const action = isCycle ? '设为循环菜谱' : '取消循环菜谱'
+  const tip = isCycle 
+    ? `设为循环菜谱后，当某周没有专属菜谱时，将自动使用此菜谱的菜品安排。同一时间只能有一个循环菜谱。` 
+    : `取消后，此菜谱将不再作为循环菜谱使用。`
+  
+  try {
+    await ElMessageBox.confirm(
+      `${tip}\n\n确定要${action}"${row.title}"吗？`,
+      action,
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }
+    )
+    
+    await weeklyMenuAPI.setCycleMenu(row.id, isCycle)
+    ElMessage.success(`${action}成功`)
+    loadMenus()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error(`${action}失败`)
+    }
+  }
+}
+
 // 删除菜谱
 const handleDelete = async (row) => {
   try {
@@ -963,6 +1004,22 @@ onMounted(() => {
   
   &:hover {
     color: #85ce61 !important;
+  }
+}
+
+.cycle {
+  color: #e6a23c !important;
+  
+  &:hover {
+    color: #ebb563 !important;
+  }
+}
+
+.warning {
+  color: #909399 !important;
+  
+  &:hover {
+    color: #b1b3b8 !important;
   }
 }
 

@@ -65,6 +65,10 @@
               <van-icon :name="meal.icon" />
               <span class="meal-name">{{ meal.label }}</span>
               <span class="dish-count">({{ getMealDishes(meal.value).length }}道菜)</span>
+              <span v-if="isToday" class="meal-time" :class="{ active: isMealOrderable(meal.value) }">
+                {{ getMealTimeRange(meal.value) }}
+                <van-tag v-if="isMealOrderable(meal.value)" type="success" size="small">点餐中</van-tag>
+              </span>
             </div>
             
             <div class="dish-list">
@@ -72,7 +76,7 @@
                 class="dish-card"
                 v-for="item in getMealItems(meal.value)"
                 :key="item.id"
-                @click="viewDishDetail(item)"
+                @click="viewDishDetail(item, meal.value)"
               >
                 <div class="dish-image">
                   <van-image
@@ -97,12 +101,39 @@
                     </span>
                   </div>
                   <div class="dish-actions">
+                    <template v-if="isMealOrderable(meal.value)">
+                      <div class="cart-control" v-if="getCartQuantity(item.dish.id) > 0">
+                        <van-button 
+                          size="small" 
+                          icon="minus"
+                          round
+                          @click.stop="decreaseFromCart(item.dish.id)"
+                        />
+                        <span class="cart-quantity">{{ getCartQuantity(item.dish.id) }}</span>
+                        <van-button 
+                          size="small" 
+                          type="primary"
+                          icon="plus"
+                          round
+                          @click.stop="addToCart(item.dish, meal.value)"
+                        />
+                      </div>
+                      <van-button 
+                        v-else
+                        size="small" 
+                        type="primary" 
+                        @click.stop="addToCart(item.dish, meal.value)"
+                      >
+                        加入购物车
+                      </van-button>
+                    </template>
                     <van-button 
+                      v-else
                       size="small" 
                       type="primary" 
-                      @click.stop="addToCart(item.dish)"
+                      disabled
                     >
-                      加入购物车
+                      {{ !isToday ? '仅今日可点' : getMealTimeRange(meal.value) + '可点' }}
                     </van-button>
                     <van-button 
                       size="small" 
@@ -171,12 +202,37 @@
         </div>
         
         <div class="popup-footer">
+          <template v-if="isMealOrderable(selectedMealType)">
+            <div class="popup-cart-control" v-if="getCartQuantity(selectedItem.dish.id) > 0">
+              <van-button 
+                icon="minus"
+                round
+                @click="decreaseFromCart(selectedItem.dish.id)"
+              />
+              <span class="cart-quantity">{{ getCartQuantity(selectedItem.dish.id) }}</span>
+              <van-button 
+                type="primary"
+                icon="plus"
+                round
+                @click="addToCart(selectedItem.dish, selectedMealType)"
+              />
+            </div>
+            <van-button 
+              v-else
+              type="primary" 
+              block 
+              @click="addToCart(selectedItem.dish, selectedMealType)"
+            >
+              加入购物车
+            </van-button>
+          </template>
           <van-button 
+            v-else
             type="primary" 
             block 
-            @click="addToCart(selectedItem.dish)"
+            disabled
           >
-            加入购物车
+            {{ !isToday ? '仅支持今日菜品下单' : getMealTimeRange(selectedMealType) + ' 可点餐' }}
           </van-button>
         </div>
       </div>
@@ -242,6 +298,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { showToast, showLoadingToast, closeToast } from 'vant'
 import { weeklyMenuAPI } from '@/api/weekly_menu'
+import { useCartStore } from '@/stores/cart'
 import dayjs from 'dayjs'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import isoWeek from 'dayjs/plugin/isoWeek'
@@ -258,6 +315,7 @@ const currentWeekStart = ref(dayjs().isoWeekday(1)) // 使用 ISO 周一
 const selectedDate = ref('')
 const dishDetailVisible = ref(false)
 const selectedItem = ref(null) // 改为 menu_item
+const selectedMealType = ref(null) // 当前选中菜品所属餐次
 const myRatings = ref([]) // 用户的评价列表
 
 // 评价相关
@@ -270,13 +328,40 @@ const ratingForm = reactive({
   comment: ''
 })
 
-// 餐次配置
+// 判断当前选中日期是否为今天
+const isToday = computed(() => {
+  return selectedDate.value === dayjs().format('YYYY-MM-DD')
+})
+
+// 餐次配置（含可点餐时间段）
 const mealTypes = [
-  { value: 1, label: '早餐', icon: 'sun-o' },
-  { value: 2, label: '午餐', icon: 'sun' },
-  { value: 3, label: '晚餐', icon: 'moon-o' },
-  { value: 4, label: '值班餐', icon: 'clock-o' }
+  { value: 1, label: '早餐', icon: 'sun-o', startHour: 5, startMin: 0, endHour: 9, endMin: 0 },
+  { value: 2, label: '午餐', icon: 'sun', startHour: 9, startMin: 30, endHour: 14, endMin: 0 },
+  { value: 3, label: '晚餐', icon: 'moon-o', startHour: 14, startMin: 30, endHour: 20, endMin: 0 },
+  { value: 4, label: '值班餐', icon: 'clock-o', startHour: 0, startMin: 0, endHour: 23, endMin: 59 }
 ]
+
+// 判断某餐次当前是否在可点餐时间范围内
+const isMealOrderable = (mealType) => {
+  if (!isToday.value) return false
+  const meal = mealTypes.find(m => m.value === mealType)
+  if (!meal) return false
+  const now = dayjs()
+  const start = dayjs().hour(meal.startHour).minute(meal.startMin).second(0)
+  const end = dayjs().hour(meal.endHour).minute(meal.endMin).second(0)
+  return now.isAfter(start) && now.isBefore(end)
+}
+
+// 获取餐次的可点餐时间描述
+const getMealTimeRange = (mealType) => {
+  const meal = mealTypes.find(m => m.value === mealType)
+  if (!meal) return ''
+  const sh = String(meal.startHour).padStart(2, '0')
+  const sm = String(meal.startMin).padStart(2, '0')
+  const eh = String(meal.endHour).padStart(2, '0')
+  const em = String(meal.endMin).padStart(2, '0')
+  return `${sh}:${sm}-${eh}:${em}`
+}
 
 // 计算属性
 const weekTitle = computed(() => {
@@ -424,14 +509,41 @@ const getImageUrl = (url) => {
   return `http://localhost:8080${url}`
 }
 
-const viewDishDetail = (item) => {
+const viewDishDetail = (item, mealType) => {
   selectedItem.value = item
+  selectedMealType.value = mealType
   dishDetailVisible.value = true
 }
 
-const addToCart = (dish) => {
-  // 这里实现添加到购物车的逻辑
-  showToast('已添加到购物车')
+const cartStore = useCartStore()
+
+const getCartQuantity = (dishId) => {
+  const item = cartStore.items.find(i => i.id === dishId)
+  return item ? item.quantity : 0
+}
+
+const decreaseFromCart = (dishId) => {
+  const item = cartStore.items.find(i => i.id === dishId)
+  if (item) {
+    if (item.quantity <= 1) {
+      cartStore.removeItem(dishId)
+    } else {
+      cartStore.updateQuantity(dishId, item.quantity - 1)
+    }
+  }
+}
+
+const addToCart = (dish, mealType) => {
+  if (!isToday.value) {
+    showToast('仅支持今日菜品下单')
+    return
+  }
+  if (mealType && !isMealOrderable(mealType)) {
+    const meal = mealTypes.find(m => m.value === mealType)
+    showToast(`${meal.label}点餐时间为 ${getMealTimeRange(mealType)}`)
+    return
+  }
+  cartStore.addItem(dish)
   dishDetailVisible.value = false
 }
 
@@ -617,6 +729,19 @@ onMounted(() => {
         font-size: 12px;
         color: #969799;
       }
+
+      .meal-time {
+        margin-left: auto;
+        font-size: 12px;
+        color: #969799;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        &.active {
+          color: #07c160;
+        }
+      }
     }
     
     .dish-list {
@@ -694,10 +819,32 @@ onMounted(() => {
           .dish-actions {
             display: flex;
             gap: 8px;
+            align-items: center;
             
             .van-button {
               --van-button-small-height: 28px;
               --van-button-small-font-size: 12px;
+            }
+
+            .cart-control {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              .van-button {
+                width: 28px;
+                height: 28px;
+                padding: 0;
+                min-width: 28px;
+              }
+
+              .cart-quantity {
+                font-size: 14px;
+                font-weight: 600;
+                color: #323233;
+                min-width: 20px;
+                text-align: center;
+              }
             }
           }
         }
@@ -794,6 +941,28 @@ onMounted(() => {
   .popup-footer {
     padding: 16px;
     border-top: 1px solid #ebedf0;
+
+    .popup-cart-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+
+      .van-button {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        min-width: 40px;
+      }
+
+      .cart-quantity {
+        font-size: 20px;
+        font-weight: 600;
+        color: #323233;
+        min-width: 32px;
+        text-align: center;
+      }
+    }
   }
 }
 

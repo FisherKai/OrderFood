@@ -26,6 +26,11 @@ export const weeklyMenuAPI = {
     return request.put(`/admin/menus/weekly/${id}/publish`)
   },
 
+  // 设置/取消循环菜谱（管理员）
+  setCycleMenu(id, isCycle) {
+    return request.put(`/admin/menus/weekly/${id}/cycle`, { is_cycle: isCycle })
+  },
+
   // 删除菜谱（管理员）
   deleteWeeklyMenu(id) {
     return request.delete(`/admin/menus/weekly/${id}`)

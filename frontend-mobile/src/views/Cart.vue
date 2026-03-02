@@ -36,8 +36,8 @@
     
     <van-tabbar v-model="active" route>
       <van-tabbar-item to="/home" icon="home-o">首页</van-tabbar-item>
-      <van-tabbar-item to="/dishes" icon="apps-o">菜品</van-tabbar-item>
       <van-tabbar-item to="/cart" icon="shopping-cart-o" :badge="cartStore.totalCount">购物车</van-tabbar-item>
+      <van-tabbar-item to="/orders" icon="orders-o">订单</van-tabbar-item>
       <van-tabbar-item to="/profile" icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
   </div>
@@ -52,7 +52,7 @@ import { createOrder } from '@/api/order'
 
 const router = useRouter()
 const cartStore = useCartStore()
-const active = ref(2)
+const active = ref(1)
 
 const checkedItems = ref([])
 const checkAll = ref(false)

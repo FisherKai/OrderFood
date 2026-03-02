@@ -168,6 +168,7 @@ func SetupRouter() *gin.Engine {
 				adminAuth.GET("/menus/weekly", controllers.GetWeeklyMenus)
 				adminAuth.GET("/menus/weekly/:id", controllers.GetWeeklyMenuDetail)
 				adminAuth.PUT("/menus/weekly/:id/publish", controllers.PublishWeeklyMenu)
+				adminAuth.PUT("/menus/weekly/:id/cycle", controllers.SetCycleMenu)
 
 				// 菜品点赞管理
 				adminAuth.GET("/dishes/likes", controllers.GetDishLikeStats)
