@@ -537,7 +537,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .stats-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .header-actions {
@@ -554,14 +554,14 @@ onMounted(() => {
     margin-bottom: 2px;
     
     .label {
-      color: #909399;
+      color: #8c8c8c;
     }
     
     .value {
       font-weight: 500;
       
       &.success {
-        color: #67c23a;
+        color: #52c41a;
       }
     }
   }
@@ -574,7 +574,7 @@ onMounted(() => {
     
     h4 {
       margin-bottom: 15px;
-      color: #303133;
+      color: #1a1a2e;
     }
   }
   
@@ -583,32 +583,32 @@ onMounted(() => {
     
     h4 {
       margin-bottom: 15px;
-      color: #303133;
+      color: #1a1a2e;
     }
     
     .stat-box {
       text-align: center;
-      padding: 15px;
-      background-color: #f8f9fa;
-      border-radius: 4px;
+      padding: 16px;
+      background-color: #fafbfc;
+      border-radius: 8px;
       
       .stat-number {
-        font-size: 24px;
-        font-weight: bold;
-        color: #409eff;
-        margin-bottom: 5px;
+        font-size: 22px;
+        font-weight: 700;
+        color: #1677ff;
+        margin-bottom: 4px;
       }
       
       .stat-label {
         font-size: 12px;
-        color: #909399;
+        color: #8c8c8c;
       }
     }
   }
 }
 
 .pagination-container {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: right;
 }
 
@@ -620,8 +620,8 @@ onMounted(() => {
   z-index: 1000;
   
   .el-card {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
   }
   
   .batch-info {
@@ -639,10 +639,10 @@ onMounted(() => {
 }
 
 .danger {
-  color: #f56c6c !important;
+  color: #ff4d4f !important;
   
   &:hover {
-    color: #f78989 !important;
+    color: #ff7875 !important;
   }
 }
 </style>

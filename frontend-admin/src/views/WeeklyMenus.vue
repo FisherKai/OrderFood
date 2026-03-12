@@ -855,20 +855,23 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .menu-calendar {
-  border: 1px solid #e4e7ed;
-  border-radius: 4px;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
   
   .week-header {
     display: flex;
-    background-color: #f5f7fa;
-    border-bottom: 1px solid #e4e7ed;
+    background-color: #fafbfc;
+    border-bottom: 1px solid #f0f0f0;
     
     .day-header {
       flex: 1;
       padding: 12px 8px;
       text-align: center;
-      border-right: 1px solid #e4e7ed;
+      border-right: 1px solid #f0f0f0;
       font-weight: 500;
+      font-size: 13px;
+      color: #1a1a2e;
       
       &:last-child {
         border-right: none;
@@ -876,8 +879,8 @@ onMounted(() => {
       
       .date {
         display: block;
-        font-size: 12px;
-        color: #909399;
+        font-size: 11px;
+        color: #8c8c8c;
         margin-top: 4px;
       }
     }
@@ -886,7 +889,7 @@ onMounted(() => {
   .meal-rows {
     .meal-row {
       display: flex;
-      border-bottom: 1px solid #e4e7ed;
+      border-bottom: 1px solid #f0f0f0;
       min-height: 120px;
       
       &:last-child {
@@ -896,12 +899,14 @@ onMounted(() => {
       .meal-label {
         width: 80px;
         padding: 12px 8px;
-        background-color: #fafafa;
-        border-right: 1px solid #e4e7ed;
+        background-color: #fafbfc;
+        border-right: 1px solid #f0f0f0;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 500;
+        font-size: 13px;
+        color: #595959;
       }
       
       .meal-cells {
@@ -911,7 +916,7 @@ onMounted(() => {
         .meal-cell {
           flex: 1;
           padding: 8px;
-          border-right: 1px solid #e4e7ed;
+          border-right: 1px solid #f0f0f0;
           
           &:last-child {
             border-right: none;
@@ -926,19 +931,19 @@ onMounted(() => {
               justify-content: space-between;
               padding: 4px 8px;
               margin-bottom: 4px;
-              background-color: #f0f9ff;
-              border-radius: 4px;
+              background-color: #e8f4ff;
+              border-radius: 6px;
               font-size: 12px;
               
               .dish-name {
                 flex: 1;
-                color: #409eff;
+                color: #1677ff;
               }
               
               .remove-btn {
                 padding: 0;
                 margin-left: 4px;
-                color: #f56c6c;
+                color: #ff4d4f;
               }
             }
           }
@@ -947,13 +952,15 @@ onMounted(() => {
             width: 100%;
             padding: 8px;
             border: 1px dashed #d9d9d9;
-            background-color: #fafafa;
-            color: #666;
+            background-color: #fafbfc;
+            color: #8c8c8c;
             font-size: 12px;
+            border-radius: 6px;
             
             &:hover {
-              border-color: #409eff;
-              color: #409eff;
+              border-color: #1677ff;
+              color: #1677ff;
+              background-color: #f0f7ff;
             }
           }
         }
@@ -971,7 +978,7 @@ onMounted(() => {
 }
 
 .pagination-container {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: right;
 }
 
@@ -983,8 +990,8 @@ onMounted(() => {
   z-index: 1000;
   
   .el-card {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
   }
   
   .batch-info {
@@ -1000,34 +1007,34 @@ onMounted(() => {
 }
 
 .success {
-  color: #67c23a !important;
+  color: #52c41a !important;
   
   &:hover {
-    color: #85ce61 !important;
+    color: #73d13d !important;
   }
 }
 
 .cycle {
-  color: #e6a23c !important;
+  color: #d48806 !important;
   
   &:hover {
-    color: #ebb563 !important;
+    color: #faad14 !important;
   }
 }
 
 .warning {
-  color: #909399 !important;
+  color: #8c8c8c !important;
   
   &:hover {
-    color: #b1b3b8 !important;
+    color: #bfbfbf !important;
   }
 }
 
 .danger {
-  color: #f56c6c !important;
+  color: #ff4d4f !important;
   
   &:hover {
-    color: #f78989 !important;
+    color: #ff7875 !important;
   }
 }
 
@@ -1044,25 +1051,25 @@ onMounted(() => {
         padding: 8px 12px;
         margin-bottom: 8px;
         background-color: #fff;
-        border: 1px solid #e4e7ed;
-        border-radius: 4px;
+        border: 1px solid #f0f0f0;
+        border-radius: 8px;
         
         .dish-name {
           flex: 1;
-          font-size: 14px;
-          color: #303133;
+          font-size: 13px;
+          color: #1a1a2e;
         }
         
         .dish-price {
           font-size: 12px;
-          color: #f56c6c;
+          color: #ff4d4f;
           font-weight: 500;
         }
       }
       
       .no-dish {
         text-align: center;
-        color: #c0c4cc;
+        color: #bfbfbf;
         font-size: 12px;
         padding: 20px;
       }

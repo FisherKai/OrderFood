@@ -596,7 +596,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .stats-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .header-actions {
@@ -606,33 +606,34 @@ onMounted(() => {
 
 .order-detail {
   padding: 20px;
-  background-color: #f8f9fa;
+  background-color: #fafbfc;
+  border-radius: 8px;
   
   h4 {
     margin: 0 0 15px 0;
-    color: #303133;
+    color: #1a1a2e;
   }
 }
 
 .order-detail-dialog {
   .price {
-    color: #e6a23c;
-    font-weight: bold;
+    color: #d48806;
+    font-weight: 600;
     font-size: 16px;
   }
 }
 
 .price {
-  color: #e6a23c;
-  font-weight: bold;
+  color: #d48806;
+  font-weight: 600;
 }
 
 .text-muted {
-  color: #909399;
+  color: #8c8c8c;
 }
 
 .pagination-container {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: right;
 }
 
@@ -644,8 +645,8 @@ onMounted(() => {
   z-index: 1000;
   
   .el-card {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
   }
   
   .batch-info {
@@ -678,7 +679,6 @@ onMounted(() => {
   .el-button {
     margin: 0 !important;
     
-    // 移动端按钮更紧凑
     @media (max-width: 768px) {
       padding: 4px 8px;
       font-size: 12px;

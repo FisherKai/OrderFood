@@ -423,7 +423,7 @@ const loadAnnouncements = async () => {
           end_time: '2025-12-17T23:59:59+08:00',
           status: 1,
           sort: 10,
-          content: '我们的点餐系统现在正式上线！享受便捷的点餐服务。',
+          content: '我们的健康食堂现在正式上线！享受便捷的用餐服务。',
           created_at: new Date('2025-11-17T14:47:00')
         },
         {
@@ -704,15 +704,15 @@ onMounted(() => {
 <style scoped lang="scss">
 .time-range {
   font-size: 12px;
-  color: #606266;
+  color: #595959;
   
   div:first-child {
-    color: #67c23a;
+    color: #52c41a;
     font-weight: 500;
   }
   
   div:last-child {
-    color: #f56c6c;
+    color: #ff4d4f;
     margin-top: 2px;
   }
 }
@@ -725,7 +725,7 @@ onMounted(() => {
 }
 
 .form-tip {
-  color: #909399;
+  color: #8c8c8c;
   font-size: 12px;
   margin-top: 5px;
 }
@@ -736,13 +736,13 @@ onMounted(() => {
 
 .announcement-preview {
   .preview-header {
-    border-bottom: 1px solid #e4e7ed;
+    border-bottom: 1px solid #f0f0f0;
     padding-bottom: 15px;
     margin-bottom: 20px;
     
     h3 {
       margin: 0 0 10px 0;
-      color: #303133;
+      color: #1a1a2e;
     }
     
     .preview-meta {
@@ -752,20 +752,20 @@ onMounted(() => {
       
       .preview-time {
         font-size: 12px;
-        color: #909399;
+        color: #8c8c8c;
       }
     }
   }
   
   .preview-content {
     line-height: 1.8;
-    color: #606266;
+    color: #595959;
     white-space: pre-wrap;
   }
 }
 
 .pagination-container {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: right;
 }
 
@@ -777,8 +777,8 @@ onMounted(() => {
   z-index: 1000;
   
   .el-card {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
   }
   
   .batch-info {
@@ -796,10 +796,10 @@ onMounted(() => {
 }
 
 .danger {
-  color: #f56c6c !important;
+  color: #ff4d4f !important;
   
   &:hover {
-    color: #f78989 !important;
+    color: #ff7875 !important;
   }
 }
 </style>

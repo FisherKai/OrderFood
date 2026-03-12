@@ -477,15 +477,15 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .stats-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .charts-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .activity-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .chart-container {
@@ -501,22 +501,24 @@ onUnmounted(() => {
   .info-item {
     display: flex;
     justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #fafafa;
     
     &:last-child {
       border-bottom: none;
     }
     
     .label {
-      color: #909399;
-      font-size: 14px;
+      color: #8c8c8c;
+      font-size: 13px;
     }
     
     .value {
-      color: #303133;
-      font-size: 14px;
+      color: #1a1a2e;
+      font-size: 13px;
       font-weight: 500;
+      font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
     }
   }
 }
@@ -524,19 +526,21 @@ onUnmounted(() => {
 // 移动端订单卡片列表
 .mobile-order-list {
   .order-card {
-    background: #fafafa;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 10px;
+    background: #fafbfc;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 8px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
     
     &:hover {
       background: #f0f7ff;
+      border-color: rgba(22, 119, 255, 0.1);
     }
     
     &:active {
-      transform: scale(0.98);
+      transform: scale(0.99);
     }
     
     &:last-child {
@@ -550,9 +554,9 @@ onUnmounted(() => {
       margin-bottom: 10px;
       
       .order-id {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 600;
-        color: #303133;
+        color: #1a1a2e;
       }
     }
     
@@ -560,18 +564,18 @@ onUnmounted(() => {
       .order-info {
         display: flex;
         justify-content: space-between;
-        padding: 4px 0;
+        padding: 3px 0;
         font-size: 13px;
         
         .label {
-          color: #909399;
+          color: #8c8c8c;
         }
         
         .value {
-          color: #606266;
+          color: #595959;
           
           &.price {
-            color: #f56c6c;
+            color: #ff4d4f;
             font-weight: 600;
           }
         }
@@ -585,26 +589,26 @@ onUnmounted(() => {
   padding: 12px;
   
   .stats-row {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    
+    :deep(.el-col) {
+      margin-bottom: 8px;
+    }
+  }
+  
+  .charts-row {
+    margin-bottom: 10px;
     
     :deep(.el-col) {
       margin-bottom: 10px;
     }
   }
   
-  .charts-row {
-    margin-bottom: 12px;
-    
-    :deep(.el-col) {
-      margin-bottom: 12px;
-    }
-  }
-  
   .activity-row {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     
     :deep(.el-col) {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
   }
   
@@ -613,7 +617,7 @@ onUnmounted(() => {
       padding: 10px 0;
       
       .label, .value {
-        font-size: 13px;
+        font-size: 12px;
       }
     }
   }
@@ -621,7 +625,7 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   :deep(.el-col) {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   
   .chart-container {

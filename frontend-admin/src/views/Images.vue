@@ -797,7 +797,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .stats-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .header-actions {
@@ -806,7 +806,7 @@ onMounted(() => {
 }
 
 .view-controls {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .image-grid {
@@ -815,20 +815,20 @@ onMounted(() => {
   gap: 16px;
   
   .image-card {
-    border: 1px solid #e4e7ed;
-    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s ease;
     
     &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
       transform: translateY(-2px);
     }
     
     &.selected {
-      border-color: #409eff;
-      box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+      border-color: #1677ff;
+      box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.15);
     }
     
     &.deleted {
@@ -857,12 +857,12 @@ onMounted(() => {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.45);
         display: flex;
         align-items: center;
         justify-content: center;
         opacity: 0;
-        transition: opacity 0.3s;
+        transition: opacity 0.2s;
         
         .image-actions {
           display: flex;
@@ -879,9 +879,9 @@ onMounted(() => {
       padding: 12px;
       
       .image-name {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 500;
-        color: #303133;
+        color: #1a1a2e;
         margin-bottom: 4px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -896,23 +896,23 @@ onMounted(() => {
         
         .image-size {
           font-size: 12px;
-          color: #909399;
+          color: #8c8c8c;
         }
       }
       
       .image-time {
         font-size: 12px;
-        color: #c0c4cc;
+        color: #bfbfbf;
       }
     }
   }
 }
 
 .table-image-preview {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   transition: transform 0.2s;
   
@@ -932,7 +932,7 @@ onMounted(() => {
 }
 
 .pagination-container {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: right;
 }
 
@@ -944,8 +944,8 @@ onMounted(() => {
   z-index: 1000;
   
   .el-card {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
   }
   
   .batch-info {
@@ -963,14 +963,14 @@ onMounted(() => {
 }
 
 .success {
-  color: #67c23a !important;
+  color: #52c41a !important;
 }
 
 .danger {
-  color: #f56c6c !important;
+  color: #ff4d4f !important;
   
   &:hover {
-    color: #f78989 !important;
+    color: #ff7875 !important;
   }
 }
 

@@ -48,20 +48,31 @@
       </div>
     </van-form>
     
-    <van-popup v-model:show="showTimePicker" position="bottom">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="datetime"
-        :min-date="minDate"
-        @confirm="confirmTime"
+    <van-popup v-model:show="showTimePicker" position="bottom" round>
+      <van-picker-group
+        title="选择预约时间"
+        :tabs="['选择日期', '选择时间']"
+        @confirm="onPickerConfirm"
         @cancel="showTimePicker = false"
-      />
+      >
+        <van-date-picker
+          v-model="pickerDate"
+          :min-date="minDate"
+          :max-date="maxDate"
+        />
+        <van-time-picker
+          v-model="pickerTime"
+          :min-hour="minHour"
+          :max-hour="22"
+          :min-minute="minMinute"
+        />
+      </van-picker-group>
     </van-popup>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
 import { useCartStore } from '@/stores/cart'
@@ -73,16 +84,76 @@ const cartStore = useCartStore()
 const reserveTime = ref('')
 const peopleCount = ref('')
 const showTimePicker = ref(false)
-const currentDate = ref(new Date())
-const minDate = computed(() => {
-  const date = new Date()
-  date.setHours(date.getHours() + 2)
-  return date
+
+// 日期选择器的值 [year, month, day]
+const now = new Date()
+const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000)
+
+const pickerDate = ref([
+  String(twoHoursLater.getFullYear()),
+  String(twoHoursLater.getMonth() + 1).padStart(2, '0'),
+  String(twoHoursLater.getDate()).padStart(2, '0')
+])
+
+// 时间选择器的值 [hour, minute]
+const pickerTime = ref([
+  String(twoHoursLater.getHours()).padStart(2, '0'),
+  String(twoHoursLater.getMinutes()).padStart(2, '0')
+])
+
+// 最小日期：今天
+const minDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+// 最大日期：30天后
+const maxDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
+
+// 动态限制：如果选的是今天，则限制最小小时和分钟
+const isToday = computed(() => {
+  const current = new Date()
+  return (
+    pickerDate.value[0] === String(current.getFullYear()) &&
+    pickerDate.value[1] === String(current.getMonth() + 1).padStart(2, '0') &&
+    pickerDate.value[2] === String(current.getDate()).padStart(2, '0')
+  )
 })
 
-const confirmTime = (value) => {
-  const date = new Date(value)
-  reserveTime.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+const minHour = computed(() => {
+  if (isToday.value) {
+    const twoHLater = new Date(Date.now() + 2 * 60 * 60 * 1000)
+    return twoHLater.getHours()
+  }
+  return 6
+})
+
+const minMinute = computed(() => {
+  if (isToday.value) {
+    const twoHLater = new Date(Date.now() + 2 * 60 * 60 * 1000)
+    const currentHour = parseInt(pickerTime.value[0])
+    if (currentHour === twoHLater.getHours()) {
+      return twoHLater.getMinutes()
+    }
+  }
+  return 0
+})
+
+// 当日期变更且选的是今天时，自动修正时间不早于最小值
+watch(pickerDate, () => {
+  if (isToday.value) {
+    const twoHLater = new Date(Date.now() + 2 * 60 * 60 * 1000)
+    const currentHour = parseInt(pickerTime.value[0])
+    const currentMin = parseInt(pickerTime.value[1])
+    if (currentHour < twoHLater.getHours() || (currentHour === twoHLater.getHours() && currentMin < twoHLater.getMinutes())) {
+      pickerTime.value = [
+        String(twoHLater.getHours()).padStart(2, '0'),
+        String(twoHLater.getMinutes()).padStart(2, '0')
+      ]
+    }
+  }
+})
+
+const onPickerConfirm = () => {
+  const [year, month, day] = pickerDate.value
+  const [hour, minute] = pickerTime.value
+  reserveTime.value = `${year}-${month}-${day} ${hour}:${minute}`
   showTimePicker.value = false
 }
 

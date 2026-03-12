@@ -413,7 +413,7 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #606266;
+  color: #595959;
 }
 
 .image-preview {
@@ -425,7 +425,7 @@ onMounted(() => {
     width: 30px;
     height: 30px;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: transform 0.2s;
     
@@ -436,25 +436,25 @@ onMounted(() => {
   
   .more-images {
     font-size: 12px;
-    color: #909399;
-    background-color: #f5f7fa;
+    color: #8c8c8c;
+    background-color: #fafbfc;
     padding: 2px 6px;
     border-radius: 4px;
   }
 }
 
 .no-image {
-  color: #c0c4cc;
+  color: #bfbfbf;
   font-size: 12px;
 }
 
 .review-detail {
   .review-content-detail {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-    color: #606266;
+    background-color: #fafbfc;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    color: #595959;
     line-height: 1.6;
     min-height: 80px;
   }
@@ -468,7 +468,7 @@ onMounted(() => {
       width: 100px;
       height: 100px;
       object-fit: cover;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
       transition: transform 0.2s;
       
@@ -492,7 +492,7 @@ onMounted(() => {
 }
 
 .pagination-container {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: right;
 }
 
@@ -504,8 +504,8 @@ onMounted(() => {
   z-index: 1000;
   
   .el-card {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
   }
   
   .batch-info {
@@ -521,10 +521,10 @@ onMounted(() => {
 }
 
 .danger {
-  color: #f56c6c !important;
+  color: #ff4d4f !important;
   
   &:hover {
-    color: #f78989 !important;
+    color: #ff7875 !important;
   }
 }
 </style>

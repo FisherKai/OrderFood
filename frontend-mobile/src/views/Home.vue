@@ -1,7 +1,30 @@
 <template>
   <div class="home">
     <!-- 页面标题 -->
-    <van-nav-bar title="点餐系统" />
+    <van-nav-bar title="健康食堂">
+      <template #right>
+        <div v-if="!isLoggedIn" class="nav-login-btn" @click="$router.push('/login')">
+          <van-icon name="user-o" size="16" />
+          <span>登录</span>
+        </div>
+        <div v-else class="nav-user-info">
+          <van-icon name="user-circle-o" size="18" color="#1989fa" />
+          <span>{{ userStore.userInfo.nickname || userStore.userInfo.username || '用户' }}</span>
+        </div>
+      </template>
+    </van-nav-bar>
+
+    <!-- 未登录提示横幅 -->
+    <div v-if="!isLoggedIn" class="login-banner" @click="$router.push('/login')">
+      <div class="banner-left">
+        <van-icon name="info-o" size="18" color="#1989fa" />
+        <span>登录后即可使用点餐、下单等功能</span>
+      </div>
+      <div class="banner-right">
+        <span>去登录</span>
+        <van-icon name="arrow" size="14" />
+      </div>
+    </div>
 
     <!-- 功能入口 -->
     <div class="function-entries">
@@ -41,10 +64,13 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useCartStore } from '@/stores/cart'
+import { useUserStore } from '@/stores/user'
 
 const cartStore = useCartStore()
+const userStore = useUserStore()
 const active = ref(0)
 const cartCount = computed(() => cartStore.totalCount || '')
+const isLoggedIn = computed(() => !!userStore.token)
 </script>
 
 <style scoped lang="scss">
@@ -52,6 +78,67 @@ const cartCount = computed(() => cartStore.totalCount || '')
   min-height: 100vh;
   background: #f7f8fa;
   padding-bottom: 50px;
+}
+
+/* 导航栏右侧登录按钮 */
+.nav-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: #1989fa;
+  color: #fff;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+/* 导航栏右侧已登录用户信息 */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #323233;
+}
+
+/* 未登录提示横幅 */
+.login-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 16px 0;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #e8f4fd, #f0f7ff);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:active {
+    opacity: 0.85;
+  }
+
+  .banner-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .banner-right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 13px;
+    color: #1989fa;
+    font-weight: 500;
+  }
 }
 
 .function-entries {

@@ -87,7 +87,7 @@ func insertDefaultData() error {
 
 	// 插入示例公告
 	announcementSQL := `INSERT INTO announcements (title, content, type, start_time, end_time, status, sort) VALUES (?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY), 1, 10)`
-	if err := database.DB.Exec(announcementSQL, "欢迎使用点餐系统", "感谢您使用我们的点餐系统，祝您用餐愉快！", 1).Error; err != nil {
+	if err := database.DB.Exec(announcementSQL, "欢迎使用健康食堂", "感谢您使用我们的健康食堂，祝您用餐愉快！", 1).Error; err != nil {
 		return fmt.Errorf("插入公告失败: %v", err)
 	}
 

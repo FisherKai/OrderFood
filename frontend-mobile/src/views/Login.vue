@@ -5,7 +5,7 @@
     <div class="login-content">
       <div class="logo">
         <van-icon name="shop-o" size="64" color="#ff6034" />
-        <h1>点餐系统</h1>
+        <h1>健康食堂</h1>
       </div>
       
       <van-form @submit="handleLogin">

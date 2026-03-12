@@ -387,7 +387,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .stats-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .header-actions {
@@ -408,15 +408,15 @@ onMounted(() => {
   
   .dist-item {
     font-size: 12px;
-    color: #909399;
+    color: #8c8c8c;
     padding: 2px 6px;
-    background: #f5f7fa;
+    background: #fafbfc;
     border-radius: 4px;
   }
 }
 
 .comment-text {
-  color: #606266;
+  color: #595959;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -425,7 +425,7 @@ onMounted(() => {
 }
 
 .pagination-container {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: right;
 }
 

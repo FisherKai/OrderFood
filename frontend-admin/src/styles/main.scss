@@ -1,15 +1,43 @@
-// 全局样式
+// ==================== 全局设计变量 ====================
+$primary: #1677ff;
+$success: #52c41a;
+$warning: #faad14;
+$danger: #ff4d4f;
+$info: #8c8c8c;
+
+$text-primary: #1a1a2e;
+$text-regular: #595959;
+$text-secondary: #8c8c8c;
+$text-placeholder: #bfbfbf;
+
+$bg-page: #f5f7fa;
+$bg-card: #fff;
+$bg-hover: #f5f7fa;
+$bg-active: #e8f4ff;
+
+$border-light: #f0f0f0;
+$border-regular: #e8e8e8;
+
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-lg: 12px;
+
+// ==================== 全局容器 ====================
 .admin-container {
-  padding: 20px;
-  background-color: #f5f5f5;
-  min-height: calc(100vh - 60px);
+  padding: 24px;
+  background-color: $bg-page;
+  min-height: calc(100vh - 56px);
   
   .admin-card {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    box-shadow: none;
     
-    .el-card__header {
-      background-color: #fafafa;
-      border-bottom: 1px solid #e8e8e8;
+    :deep(.el-card__header) {
+      background-color: transparent;
+      border-bottom: 1px solid $border-light;
+      padding: 16px 20px;
       
       .card-header {
         display: flex;
@@ -17,16 +45,185 @@
         align-items: center;
         
         .card-title {
-          font-size: 16px;
+          font-size: 15px;
           font-weight: 600;
-          color: #303133;
+          color: $text-primary;
+          letter-spacing: 0.3px;
         }
       }
+    }
+    
+    :deep(.el-card__body) {
+      padding: 16px 20px;
     }
   }
 }
 
-// 表格样式
+// ==================== Element Plus 全局覆盖 ====================
+
+// 按钮扁平化
+.el-button {
+  border-radius: $radius-md;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+  
+  &--primary {
+    --el-button-bg-color: #{$primary};
+    --el-button-border-color: #{$primary};
+    --el-button-hover-bg-color: #{lighten($primary, 8%)};
+    --el-button-hover-border-color: #{lighten($primary, 8%)};
+  }
+}
+
+// 卡片扁平化
+.el-card {
+  border-radius: $radius-lg;
+  border: 1px solid $border-light;
+  box-shadow: none;
+  transition: box-shadow 0.2s ease;
+}
+
+// Tag 扁平化
+.el-tag {
+  border-radius: 4px;
+  font-size: 12px;
+  border: none;
+  padding: 0 8px;
+  height: 22px;
+  line-height: 22px;
+  
+  &--success {
+    background: #f6ffed;
+    color: #52c41a;
+  }
+  
+  &--warning {
+    background: #fffbe6;
+    color: #d48806;
+  }
+  
+  &--danger {
+    background: #fff2f0;
+    color: #ff4d4f;
+  }
+  
+  &--info {
+    background: #f5f5f5;
+    color: #8c8c8c;
+  }
+}
+
+// 表格扁平化
+.el-table {
+  --el-table-border-color: #{$border-light};
+  --el-table-header-bg-color: #fafafa;
+  
+  &::before {
+    display: none;
+  }
+  
+  th.el-table__cell {
+    background-color: #fafafa !important;
+    color: $text-secondary;
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: 1px solid $border-light;
+  }
+  
+  td.el-table__cell {
+    border-bottom: 1px solid #fafafa;
+    font-size: 13px;
+    color: $text-regular;
+  }
+  
+  tr:hover td.el-table__cell {
+    background-color: #fafbfc !important;
+  }
+}
+
+// 分页扁平化
+.el-pagination {
+  margin-top: 16px;
+  
+  .el-pager li {
+    border-radius: $radius-sm;
+    min-width: 32px;
+    height: 32px;
+    line-height: 32px;
+    
+    &.is-active {
+      background-color: $primary;
+    }
+  }
+  
+  .btn-prev, .btn-next {
+    border-radius: $radius-sm;
+  }
+}
+
+// 输入框扁平化
+.el-input {
+  --el-input-border-radius: #{$radius-md};
+  
+  .el-input__wrapper {
+    box-shadow: 0 0 0 1px #d9d9d9 inset;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      box-shadow: 0 0 0 1px #{$primary} inset;
+    }
+    
+    &.is-focus {
+      box-shadow: 0 0 0 1px #{$primary} inset, 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+}
+
+// 选择器扁平化
+.el-select {
+  .el-select__wrapper {
+    border-radius: $radius-md;
+    box-shadow: 0 0 0 1px #d9d9d9 inset;
+    
+    &:hover {
+      box-shadow: 0 0 0 1px #{$primary} inset;
+    }
+    
+    &.is-focused {
+      box-shadow: 0 0 0 1px #{$primary} inset, 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+}
+
+// 对话框扁平化
+.el-dialog {
+  border-radius: $radius-lg;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
+  
+  .el-dialog__header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid $border-light;
+    margin-right: 0;
+    
+    .el-dialog__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: $text-primary;
+    }
+  }
+  
+  .el-dialog__body {
+    padding: 20px 24px;
+  }
+  
+  .el-dialog__footer {
+    padding: 12px 24px 20px;
+    border-top: 1px solid $border-light;
+  }
+}
+
+// ==================== 表格样式 ====================
 .admin-table {
   .el-table__header-wrapper {
     .el-table__header {
@@ -34,7 +231,7 @@
         tr {
           th {
             background-color: #fafafa;
-            color: #606266;
+            color: $text-secondary;
             font-weight: 600;
           }
         }
@@ -44,39 +241,36 @@
   
   .status-tag {
     &.success {
-      background-color: #f0f9ff;
-      color: #67c23a;
-      border-color: #b3e19d;
+      background-color: #f6ffed;
+      color: $success;
     }
     
     &.warning {
-      background-color: #fdf6ec;
-      color: #e6a23c;
-      border-color: #f5dab1;
+      background-color: #fffbe6;
+      color: $warning;
     }
     
     &.danger {
-      background-color: #fef0f0;
-      color: #f56c6c;
-      border-color: #fbc4c4;
+      background-color: #fff2f0;
+      color: $danger;
     }
     
     &.info {
-      background-color: #f4f4f5;
-      color: #909399;
-      border-color: #d3d4d6;
+      background-color: #f5f5f5;
+      color: $info;
     }
   }
 }
 
-// 表单样式
+// ==================== 表单样式 ====================
 .admin-form {
   .el-form-item {
     margin-bottom: 22px;
     
     .el-form-item__label {
-      font-weight: 600;
-      color: #606266;
+      font-weight: 500;
+      color: $text-regular;
+      font-size: 13px;
     }
   }
   
@@ -84,7 +278,7 @@
     text-align: center;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid #e8e8e8;
+    border-top: 1px solid $border-light;
     
     .el-button {
       margin: 0 10px;
@@ -93,40 +287,42 @@
   }
 }
 
-// 搜索栏样式
+// ==================== 搜索栏样式 ====================
 .search-bar {
   background-color: #fff;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  border-radius: $radius-lg;
+  border: 1px solid $border-light;
+  box-shadow: none;
   
   .search-form {
     .el-form-item {
-      margin-bottom: 10px;
-      margin-right: 20px;
+      margin-bottom: 8px;
+      margin-right: 16px;
     }
     
     .search-actions {
       .el-button {
-        margin-right: 10px;
+        margin-right: 8px;
       }
     }
   }
 }
 
-// 图片预览样式
+// ==================== 图片预览样式 ====================
 .image-preview {
   .preview-image {
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: $radius-md;
     cursor: pointer;
     transition: transform 0.2s;
+    border: 1px solid $border-light;
     
     &:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
   }
   
@@ -142,8 +338,8 @@
         position: absolute;
         top: -5px;
         right: -5px;
-        background-color: #f56c6c;
-        border: none;
+        background-color: $danger;
+        border: 2px solid #fff;
         border-radius: 50%;
         width: 20px;
         height: 20px;
@@ -154,42 +350,70 @@
         
         .el-icon {
           color: #fff;
-          font-size: 12px;
+          font-size: 10px;
         }
       }
     }
   }
 }
 
-// 统计卡片样式
+// ==================== 统计卡片样式 ====================
 .stat-card {
   text-align: center;
   padding: 20px;
+  border-radius: $radius-lg;
+  border: 1px solid $border-light;
+  box-shadow: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
   
   .stat-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
+    font-size: 40px;
+    margin-bottom: 12px;
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
     
-    &.primary { color: #409eff; }
-    &.success { color: #67c23a; }
-    &.warning { color: #e6a23c; }
-    &.danger { color: #f56c6c; }
+    &.primary { 
+      color: $primary;
+      background: rgba($primary, 0.08);
+    }
+    &.success { 
+      color: $success;
+      background: rgba($success, 0.08);
+    }
+    &.warning { 
+      color: #d48806;
+      background: rgba(#faad14, 0.08);
+    }
+    &.danger { 
+      color: $danger;
+      background: rgba($danger, 0.08);
+    }
   }
   
   .stat-number {
-    font-size: 32px;
-    font-weight: bold;
-    color: #303133;
-    margin-bottom: 8px;
+    font-size: 28px;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
   }
   
   .stat-label {
-    font-size: 14px;
-    color: #909399;
+    font-size: 13px;
+    color: $text-secondary;
   }
 }
 
-// ========== 移动端响应式样式 ==========
+// ==================== 移动端响应式样式 ====================
 
 // 移动端表格样式
 .mobile-table {
@@ -216,10 +440,11 @@
 .mobile-card-list {
   .card-item {
     background: #fff;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: $radius-lg;
+    padding: 16px;
+    margin-bottom: 10px;
+    border: 1px solid $border-light;
+    box-shadow: none;
     
     .card-header {
       display: flex;
@@ -230,7 +455,7 @@
       .card-title {
         font-size: 15px;
         font-weight: 600;
-        color: #303133;
+        color: $text-primary;
       }
       
       .card-status {
@@ -244,15 +469,15 @@
         justify-content: space-between;
         padding: 6px 0;
         font-size: 13px;
-        color: #606266;
-        border-bottom: 1px solid #f5f5f5;
+        color: $text-regular;
+        border-bottom: 1px solid #fafafa;
         
         &:last-child {
           border-bottom: none;
         }
         
         .label {
-          color: #909399;
+          color: $text-secondary;
         }
         
         .value {
@@ -267,7 +492,7 @@
       gap: 8px;
       margin-top: 12px;
       padding-top: 12px;
-      border-top: 1px solid #f0f0f0;
+      border-top: 1px solid $border-light;
     }
   }
 }
@@ -328,11 +553,11 @@
     width: 92% !important;
     max-width: 400px;
     margin: 15vh auto !important;
-    border-radius: 12px;
+    border-radius: $radius-lg;
     
     .el-dialog__header {
       padding: 16px 20px;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid $border-light;
       
       .el-dialog__title {
         font-size: 17px;
@@ -348,16 +573,16 @@
     
     .el-dialog__footer {
       padding: 12px 20px;
-      border-top: 1px solid #f0f0f0;
+      border-top: 1px solid $border-light;
     }
   }
 }
 
-// 响应式断点样式
+// ==================== 响应式断点 ====================
 @media (max-width: 768px) {
   .admin-container {
     padding: 12px;
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 52px);
   }
   
   .search-bar {
@@ -367,7 +592,7 @@
     .search-form {
       .el-form-item {
         margin-right: 0;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         width: 100%;
       }
       
@@ -388,16 +613,18 @@
   }
   
   .stat-card {
-    padding: 15px 10px;
+    padding: 12px 10px;
     
     .stat-icon {
-      font-size: 36px;
-      margin-bottom: 10px;
+      font-size: 32px;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 8px;
     }
     
     .stat-number {
-      font-size: 24px;
-      margin-bottom: 4px;
+      font-size: 22px;
+      margin-bottom: 2px;
     }
     
     .stat-label {
@@ -413,7 +640,7 @@
       
       .card-header {
         .card-title {
-          font-size: 15px;
+          font-size: 14px;
         }
       }
     }
@@ -498,21 +725,23 @@
 // 平板响应式 (768px - 1024px)
 @media (min-width: 768px) and (max-width: 1024px) {
   .admin-container {
-    padding: 15px;
+    padding: 16px;
   }
   
   .stat-card {
     .stat-icon {
-      font-size: 40px;
+      font-size: 36px;
+      width: 48px;
+      height: 48px;
     }
     
     .stat-number {
-      font-size: 28px;
+      font-size: 24px;
     }
   }
 }
 
-// 隐藏类
+// ==================== 工具类 ====================
 .hidden-mobile {
   @media (max-width: 768px) {
     display: none !important;
@@ -525,7 +754,6 @@
   }
 }
 
-// 仅移动端显示
 .show-mobile {
   display: none !important;
   
@@ -534,7 +762,6 @@
   }
 }
 
-// 仅桌面端显示
 .show-desktop {
   display: block !important;
   
@@ -543,7 +770,6 @@
   }
 }
 
-// 触摸友好的按钮
 .touch-btn {
   min-height: 44px;
   min-width: 44px;

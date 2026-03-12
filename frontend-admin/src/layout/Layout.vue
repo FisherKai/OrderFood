@@ -15,7 +15,7 @@
     >
       <div class="logo" @click="isMobile && closeSidebar()">
         <el-icon class="logo-icon"><Food /></el-icon>
-        <span v-if="!isCollapse || isMobile">点餐系统</span>
+        <span v-if="!isCollapse || isMobile">健康食堂</span>
       </div>
       
       <el-menu
@@ -23,9 +23,9 @@
         class="sidebar-menu"
         :collapse="!isMobile && isCollapse"
         router
-        background-color="#304156"
-        text-color="#bfcbd9"
-        active-text-color="#409eff"
+        background-color="transparent"
+        text-color="#595959"
+        active-text-color="#1677ff"
         @select="handleMenuSelect"
       >
         <el-menu-item
@@ -219,77 +219,85 @@ watch(isMobile, (newVal) => {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
     z-index: 998;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.25s ease;
+    backdrop-filter: blur(2px);
   }
   
   .sidebar {
-    background-color: #304156;
-    transition: width 0.3s;
+    background-color: #fff;
+    border-right: 1px solid #f0f0f0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     
     .logo {
-      height: 60px;
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      font-size: 18px;
-      font-weight: bold;
-      border-bottom: 1px solid #434a50;
+      color: #1a1a2e;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #f0f0f0;
       white-space: nowrap;
       
       .logo-icon {
-        font-size: 24px;
+        font-size: 22px;
         margin-right: 8px;
-        color: #409eff;
+        color: #1677ff;
         flex-shrink: 0;
       }
       
       .el-icon {
-        font-size: 24px;
+        font-size: 22px;
       }
     }
     
     .sidebar-menu {
       border: none;
-      height: calc(100vh - 60px);
+      height: calc(100vh - 56px);
       overflow-y: auto;
+      padding: 8px;
       
       &::-webkit-scrollbar {
-        width: 6px;
+        width: 4px;
       }
       
       &::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0.2);
-        border-radius: 3px;
+        background-color: rgba(0, 0, 0, 0.08);
+        border-radius: 4px;
       }
       
       :deep(.el-menu-item) {
+        border-radius: 8px;
+        margin-bottom: 2px;
+        height: 44px;
+        line-height: 44px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        
+        .el-icon {
+          font-size: 18px;
+        }
+        
         &:hover {
-          background-color: #263445;
+          background-color: #f5f7fa;
+          color: #1677ff;
         }
         
         &.is-active {
-          background-color: #409eff !important;
-          color: #fff !important;
+          background-color: #e8f4ff !important;
+          color: #1677ff !important;
+          font-weight: 500;
           
           .el-icon {
-            color: #fff !important;
+            color: #1677ff !important;
           }
           
           span {
-            color: #fff !important;
-          }
-          
-          &:before {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            border-right: 3px solid #fff;
+            color: #1677ff !important;
           }
         }
       }
@@ -302,14 +310,16 @@ watch(isMobile, (newVal) => {
       left: -280px;
       height: 100vh;
       z-index: 999;
-      transition: left 0.3s ease;
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: none;
       
       &.sidebar-visible {
         left: 0;
+        box-shadow: 4px 0 16px rgba(0, 0, 0, 0.08);
       }
       
       .sidebar-menu {
-        height: calc(100vh - 60px - 80px); // 减去logo和底部按钮高度
+        height: calc(100vh - 56px - 72px);
       }
     }
     
@@ -318,14 +328,15 @@ watch(isMobile, (newVal) => {
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 15px 20px;
-      background-color: #263445;
-      border-top: 1px solid #434a50;
+      padding: 12px 16px;
+      background-color: #fafafa;
+      border-top: 1px solid #f0f0f0;
       
       .logout-btn {
         width: 100%;
-        height: 44px;
-        font-size: 15px;
+        height: 40px;
+        font-size: 14px;
+        border-radius: 8px;
       }
     }
   }
@@ -337,38 +348,51 @@ watch(isMobile, (newVal) => {
   
   .header {
     background-color: #fff;
-    border-bottom: 1px solid #e4e7ed;
+    border-bottom: 1px solid #f0f0f0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
-    height: 60px;
+    padding: 0 24px;
+    height: 56px;
     
     .header-left {
       display: flex;
       align-items: center;
       
       .menu-btn {
-        margin-right: 15px;
+        margin-right: 16px;
         font-size: 18px;
         
         &:not(.el-button--primary) {
-          color: #606266;
+          color: #8c8c8c;
           
           &:hover {
-            color: #409eff;
+            color: #1677ff;
           }
         }
       }
       
       .page-title {
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 600;
-        color: #303133;
+        color: #1a1a2e;
       }
       
       .el-breadcrumb {
         font-size: 14px;
+        
+        :deep(.el-breadcrumb__inner) {
+          color: #8c8c8c;
+          
+          &.is-link:hover {
+            color: #1677ff;
+          }
+        }
+        
+        :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+          color: #1a1a2e;
+          font-weight: 500;
+        }
       }
     }
     
@@ -377,18 +401,21 @@ watch(isMobile, (newVal) => {
         display: flex;
         align-items: center;
         cursor: pointer;
+        padding: 4px 12px;
+        border-radius: 20px;
+        transition: background-color 0.2s;
         
         .username {
           margin: 0 8px;
-          color: #606266;
+          color: #595959;
           font-size: 14px;
         }
         
         &:hover {
-          color: #409eff;
+          background-color: #f5f7fa;
           
           .username {
-            color: #409eff;
+            color: #1677ff;
           }
         }
       }
@@ -401,8 +428,7 @@ watch(isMobile, (newVal) => {
     // 移动端头部样式
     &.header-mobile {
       padding: 0 12px;
-      height: 56px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      height: 52px;
       
       .header-left {
         .menu-btn {
@@ -414,7 +440,7 @@ watch(isMobile, (newVal) => {
   
   .main-content {
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: #f5f7fa;
     overflow-y: auto;
     
     &.main-mobile {

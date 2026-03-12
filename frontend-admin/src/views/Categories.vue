@@ -401,8 +401,8 @@ onMounted(() => {
   height: 32px;
   line-height: 32px;
   text-align: center;
-  background-color: #f5f7fa;
-  border-radius: 4px;
+  background-color: #fafbfc;
+  border-radius: 6px;
 }
 
 .icon-selector {
@@ -419,20 +419,20 @@ onMounted(() => {
       line-height: 32px;
       text-align: center;
       font-size: 18px;
-      background-color: #f5f7fa;
-      border: 1px solid #e4e7ed;
-      border-radius: 4px;
+      background-color: #fafbfc;
+      border: 1px solid #f0f0f0;
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
       
       &:hover {
-        border-color: #409eff;
-        background-color: #ecf5ff;
+        border-color: #1677ff;
+        background-color: #e8f4ff;
       }
       
       &.active {
-        border-color: #409eff;
-        background-color: #409eff;
+        border-color: #1677ff;
+        background-color: #1677ff;
         color: #fff;
       }
     }
@@ -440,7 +440,7 @@ onMounted(() => {
 }
 
 .form-tip {
-  color: #909399;
+  color: #8c8c8c;
   font-size: 12px;
   margin-top: 5px;
 }
@@ -453,8 +453,8 @@ onMounted(() => {
   z-index: 1000;
   
   .el-card {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
   }
   
   .batch-info {
@@ -470,10 +470,10 @@ onMounted(() => {
 }
 
 .danger {
-  color: #f56c6c !important;
+  color: #ff4d4f !important;
   
   &:hover {
-    color: #f78989 !important;
+    color: #ff7875 !important;
   }
 }
 </style>

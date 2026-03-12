@@ -627,12 +627,12 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .pagination-container {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: right;
 }
 
 .no-image {
-  color: #c0c4cc;
+  color: #bfbfbf;
   font-size: 12px;
 }
 
@@ -647,8 +647,8 @@ onMounted(() => {
   
   .image-item {
     position: relative;
-    border: 1px solid #e4e7ed;
-    border-radius: 4px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
     overflow: hidden;
     
     .preview-image {
@@ -663,7 +663,7 @@ onMounted(() => {
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.6);
       display: flex;
       justify-content: space-between;
       padding: 4px;
@@ -674,11 +674,11 @@ onMounted(() => {
         color: #fff;
         
         &.active {
-          color: #409eff;
+          color: #1677ff;
         }
         
         &.danger {
-          color: #f56c6c;
+          color: #ff7875;
         }
       }
     }
@@ -690,10 +690,10 @@ onMounted(() => {
 }
 
 .danger {
-  color: #f56c6c !important;
+  color: #ff4d4f !important;
   
   &:hover {
-    color: #f78989 !important;
+    color: #ff7875 !important;
   }
 }
 </style>

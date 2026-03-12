@@ -63,7 +63,7 @@ const router = createRouter({
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || '点餐系统'
+  document.title = to.meta.title || '健康食堂'
   
   if (to.meta.requiresAuth) {
     const userStore = useUserStore()
